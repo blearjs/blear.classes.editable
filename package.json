@@ -34,7 +34,7 @@
     "url": "https://github.com/blearjs/blear.classes.editable/issues"
   },
   "dependencies": {
-    "blear.classes.class": "^1.1.6",
+    "blear.classes.class": "^1.1.7",
     "blear.classes.events": "^1.0.7",
     "blear.classes.hotkey": "^1.0.1",
     "blear.core.attribute": "^1.0.11",

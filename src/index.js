@@ -132,6 +132,28 @@ var Editable = Events.extend({
     },
 
     /**
+     * 取值
+     * @returns {string|*|string}
+     */
+    getValue: function () {
+        var the = this;
+        // var cloneNode = the[_containerEl].cloneNode(true);
+        return the[_containerEl].innerHTML;
+    },
+
+    /**
+     * 设值
+     * @param value
+     * @returns {Editable}
+     */
+    setValue: function (value) {
+        var the = this;
+        the[_containerEl].innerHTML = value;
+        the.focus();
+        return the;
+    },
+
+    /**
      * 销毁实例
      */
     destroy: function () {
