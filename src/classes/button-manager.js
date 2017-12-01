@@ -15,16 +15,19 @@ var selector = require('blear.core.selector');
 var attribute = require('blear.core.attribute');
 var event = require('blear.core.event');
 
-var nativeTypeMap = {
-    bold: 1,
-    italic: 1,
-    underline: 1,
-    strikeThrough: 1
-};
+var mouseEventType = 'mousedown';
+// var nativeTypeMap = {
+//     bold: 1,
+//     italic: 1,
+//     underline: 1,
+//     strikeThrough: 1
+// };
 var defaults = {
     el: null,
     activeClassName: 'active',
-    cmd: 'bold'
+    cmd: 'bold',
+    shortcut: null,
+    hotkey: null
 };
 var ButtonManager = Events.extend({
     className: 'ButtonManager',
@@ -35,21 +38,8 @@ var ButtonManager = Events.extend({
         the[_options] = object.assign({}, defaults, options);
         the.type = 'external';
         the.active = false;
-        var cmd = the[_options].cmd;
-        the.type = nativeTypeMap[cmd] ? 'native' : 'external';
         the[_buttonEl] = selector.query(the[_options].el)[0];
-        event.on(the[_buttonEl], 'mousedown', the[_listener] = function () {
-            the.toggle();
-            the.emit('action', function () {
-                var fn = this[cmd];
-                if (typeis.Function(cmd)) {
-                    cmd.call(this)
-                } else if (typeis.Function(fn)) {
-                    fn.call(this);
-                }
-            });
-            return false;
-        });
+        the[_initEvent]();
     },
 
     /**
@@ -78,8 +68,13 @@ var ButtonManager = Events.extend({
      */
     destroy: function () {
         var the = this;
+        var shortcut = the[_options].shortcut;
 
-        event.un(the[_buttonEl], 'mousedown', the[_listener]);
+        if (shortcut) {
+            the[_options].hotkey.unbind(shortcut, the[_action]);
+        }
+
+        event.un(the[_buttonEl], mouseEventType, the[_listener]);
         ButtonManager.invoke('destroy', the);
     }
 });
@@ -88,8 +83,40 @@ var sole = ButtonManager.sole;
 var pro = ButtonManager.prototype;
 var _options = sole();
 var _buttonEl = sole();
+var _initEvent = sole();
 var _listener = sole();
 var _active = sole();
+var _action = sole();
+
+/**
+ * 初始化事件
+ */
+pro[_initEvent] = function () {
+    var the = this;
+    var cmd = the[_options].cmd;
+
+    the[_action] = function () {
+        the.emit('action', function () {
+            // this === editable
+            var fn = this[cmd];
+            if (typeis.Function(cmd)) {
+                cmd.call(this)
+            } else if (typeis.Function(fn)) {
+                fn.call(this);
+            }
+        });
+    };
+
+    if (the[_options].shortcut) {
+        the[_options].hotkey.bind(the[_options].shortcut, the[_action]);
+    }
+
+    event.on(the[_buttonEl], mouseEventType, the[_listener] = function (ev) {
+        the.toggle();
+        the[_action]();
+        ev.preventDefault();
+    });
+};
 
 /**
  * 激活按钮

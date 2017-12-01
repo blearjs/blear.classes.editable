@@ -10,10 +10,8 @@
 'use strict';
 
 
-'use strict';
-
-
 var Events = require('blear.classes.events');
+var Hotkey = require('blear.classes.hotkey');
 var selector = require('blear.core.selector');
 var modification = require('blear.core.modification');
 var event = require('blear.core.event');
@@ -52,6 +50,9 @@ var Editable = Events.extend({
         the[_options] = object.assign({}, defaults, options);
         the[_buttons] = [];
         the[_containerEl] = selector.query(the[_options].el)[0];
+        the[_hotkey] = new Hotkey({
+            el: the[_containerEl]
+        });
         the[_rangerManager] = new RangeManager({
             containerEl: the[_containerEl],
             historyManager: new HistoryManager()
@@ -105,13 +106,16 @@ var Editable = Events.extend({
      * @param meta {Object}
      * @param meta.el
      * @param meta.cmd {String|Function}
+     * @param [meta.shortcut] {String}
      * @returns {Editable}
      */
     button: function (meta) {
         var the = this;
         var button = new ButtonManager({
             el: meta.el,
-            cmd: meta.cmd
+            cmd: meta.cmd,
+            hotkey: the[_hotkey],
+            shortcut: meta.shortcut
         });
         the[_pushButtons](button);
         return the;
@@ -142,12 +146,14 @@ var Editable = Events.extend({
             btn.destroy();
         });
         the[_buttons] = null;
+        the[_hotkey].destroy();
         Editable.invoke('destroy', the);
     }
 });
 var pro = Editable.prototype;
 var sole = Editable.sole;
 var _options = sole();
+var _hotkey = sole();
 var _buttons = sole();
 var _initNode = sole();
 var _pastingContainerEl = sole();
@@ -179,20 +185,19 @@ pro[_initEvent] = function () {
     var the = this;
     var options = the[_options];
 
+    the[_hotkey].bind('backspace', function (ev) {
+        if (nodal.isEmpty(the[_containerEl])) {
+            the[_fixContainer]();
+            return ev.preventDefault();
+        }
+
+        if (isInitialState(the[_containerEl])) {
+            return ev.preventDefault();
+        }
+    });
+
     event.on(the[_containerEl], 'keydown', the[_onKeydownListener] = function (ev) {
         the[_rangerManager].change();
-
-        // backspace
-        if (ev.which === 8) {
-            if (nodal.isEmpty(the[_containerEl])) {
-                the[_fixContainer]();
-                return false;
-            }
-
-            if (isInitialState(the[_containerEl])) {
-                return false;
-            }
-        }
     });
 
     event.on(the[_containerEl], 'paste', the[_onPasteListener] = function (ev) {
