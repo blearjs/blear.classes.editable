@@ -10,7 +10,6 @@
 
 var Events = require('blear.classes.events');
 var object = require('blear.utils.object');
-var typeis = require('blear.utils.typeis');
 var selector = require('blear.core.selector');
 var attribute = require('blear.core.attribute');
 var event = require('blear.core.event');
@@ -92,22 +91,16 @@ var _action = sole();
  */
 pro[_initEvent] = function () {
     var the = this;
-    var cmd = the[_options].cmd;
 
     the[_action] = function () {
-        the.emit('action', function () {
-            // this === editable
-            var fn = this[cmd];
-            if (typeis.Function(cmd)) {
-                cmd.call(this)
-            } else if (typeis.Function(fn)) {
-                fn.call(this);
-            }
-        });
+        the.emit('action', the[_options].cmd);
     };
 
     if (the[_options].shortcut) {
-        the[_options].hotkey.bind(the[_options].shortcut, the[_action]);
+        the[_options].hotkey.bind(the[_options].shortcut, function (ev) {
+            the[_action]();
+            ev.preventDefault();
+        });
     }
 
     event.on(the[_buttonEl], mouseEventType, the[_listener] = function (ev) {

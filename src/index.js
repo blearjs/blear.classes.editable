@@ -274,12 +274,25 @@ pro[_pushButtons] = function (button) {
 
     the[_buttons].push(button);
     button.on('action', function (cmd) {
-        cmd.call(the);
+        var type = typeis(cmd);
+
+        switch (type) {
+            case 'function':
+                cmd.call(the);
+                break;
+
+            case 'string':
+                if (typeis.Function(the[cmd])) {
+                    the[cmd].call(the);
+                }
+                break;
+        }
     });
 };
 
 
 Editable.defaults = defaults;
+Editable.mac = Hotkey.mac;
 module.exports = Editable;
 
 // ===============================================
