@@ -36,7 +36,6 @@ var ButtonManager = Events.extend({
 
         ButtonManager.parent(the);
         the[_options] = object.assign({}, defaults, options);
-        the.type = 'external';
         the.active = false;
         the[_buttonEl] = selector.query(the[_options].el)[0];
         the[_initEvent]();
