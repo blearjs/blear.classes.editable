@@ -10,9 +10,7 @@
 
 var modfication = require('blear.core.modification');
 var attribute = require('blear.core.attribute');
-
-var nodal = require('./nodal');
-var detachFor = nodal.detachFor;
+var array = require('blear.utils.array');
 
 var dataRE = /^data-[.]+/;
 
@@ -30,16 +28,16 @@ module.exports = cleanNode;
  */
 function cleanNode(node, allowTags, allowAttrs, allowData) {
     var work = function (node) {
-        var childNodes = node.childNodes;
+        var childNodes = array.from(node.childNodes);
 
-        detachFor(childNodes, function (i, childNode) {
+        array.each(childNodes, function (i, childNode) {
             var childNodeType = childNode.nodeType;
 
             if (childNodeType === 1) {
-                var attrs = childNode.attributes;
+                var attrs = array.from(childNode.attributes);
                 var childNodeName = childNode.nodeName.toLowerCase();
 
-                detachFor(attrs, function (j, attr) {
+                array.each(attrs, function (j, attr) {
                     var attrName = attr.name;
 
                     if (attrName === 'style' || allowData && dataRE.test(attrName)) {

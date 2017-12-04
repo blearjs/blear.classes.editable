@@ -11,7 +11,6 @@
 exports.isEmpty = isEmpty;
 exports.getLastChildNode = getLastChildNode;
 exports.getNodeLength = getNodeLength;
-exports.detachFor = detachFor;
 
 // ==================================
 
@@ -55,21 +54,3 @@ function getNodeLength(node) {
             return node.childNodes.length;
     }
 }
-
-/**
- * 分离式遍历
- * @param list
- * @param callback
- */
-function detachFor(list, callback) {
-    var i = 0;
-    var j = list.length;
-
-    for (; i < j; i++) {
-        if (callback.call(list[i], i, list[i], list) === false) {
-            i--;
-            j--;
-        }
-    }
-}
-

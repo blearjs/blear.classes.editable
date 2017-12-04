@@ -250,9 +250,9 @@ pro[_initEvent] = function () {
         the[_pastingContainerEl].focus();
         time.nextTick(function () {
             clean(the[_pastingContainerEl], options.allowTags, options.allowAttrs, true);
-            var pastingNodes = the[_pastingContainerEl].childNodes;
+            var pastingNodes = array.from(the[_pastingContainerEl].childNodes);
 
-            nodal.detachFor(pastingNodes, function (index, node) {
+            array.each(pastingNodes, function (index, node) {
                 the[_rangerManager].insertNode(node);
                 return false;
             });
