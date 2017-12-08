@@ -337,16 +337,16 @@ function nativeExec(command) {
  * @returns {boolean}
  */
 function isInitialState(containerEl) {
-    var childNodes = containerEl.childNodes;
+    var children = containerEl.children;
 
-    if (childNodes.length > 1) {
+    if (children.length > 1) {
         return false;
     }
 
-    var childNode = childNodes[0];
-    var childChildNodes = childNode.childNodes;
+    var pEl = children[0];
+    var pChildren = pEl.childNodes;
 
-    return childChildNodes.length === 1 && childChildNodes[0].nodeName === 'BR';
+    return pChildren.length === 1 && pChildren[0].nodeName === 'BR';
 }
 
 /**
