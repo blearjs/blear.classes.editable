@@ -136,6 +136,16 @@ var Editable = Events.extend({
      * 取值
      * @returns {string|*|string}
      */
+    getText: function () {
+        var the = this;
+        // var cloneNode = the[_containerEl].cloneNode(true);
+        return attribute.text(the[_containerEl]);
+    },
+
+    /**
+     * 取值
+     * @returns {string|*|string}
+     */
     getValue: function () {
         var the = this;
         // var cloneNode = the[_containerEl].cloneNode(true);
@@ -150,6 +160,7 @@ var Editable = Events.extend({
     setValue: function (value) {
         var the = this;
         the[_containerEl].innerHTML = value;
+        the[_fixContainer]();
         the.focus();
         the.emit('change');
         return the;
@@ -162,6 +173,7 @@ var Editable = Events.extend({
         var the = this;
 
         event.un(the[_containerEl], 'keydown', the[_onKeydownListener]);
+        event.un(the[_containerEl], 'keyup', the[_onKeyupListener]);
         event.un(the[_containerEl], 'paste', the[_onPasteListener]);
         event.un(the[_containerEl], 'mousedown', the[_onMousedownListener]);
         the[_rangerManager].destroy();
@@ -191,6 +203,7 @@ var _afterExec = sole();
 var _fixContainer = sole();
 var _pushButtons = sole();
 var _onKeydownListener = sole();
+var _onKeyupListener = sole();
 var _onPasteListener = sole();
 var _onMousedownListener = sole();
 
@@ -225,6 +238,10 @@ pro[_initEvent] = function () {
         the[_rangerManager].change();
     });
 
+    event.on(the[_containerEl], 'keyup', the[_onKeyupListener] = function () {
+        the.emit('change');
+    });
+
     event.on(the[_containerEl], 'paste', the[_onPasteListener] = function (ev) {
         if (the[_pastingContainerEl]) {
             return false;
@@ -245,6 +262,7 @@ pro[_initEvent] = function () {
                     height: meta.height || 'auto'
                 });
                 the.insertNode(imgEl);
+                the.emit('change');
             });
             return false;
         }
@@ -263,6 +281,7 @@ pro[_initEvent] = function () {
             the.focus();
             modification.remove(the[_pastingContainerEl]);
             the[_pastingContainerEl] = null;
+            the.emit('change');
         });
     });
 
@@ -275,6 +294,7 @@ pro[_initEvent] = function () {
         array.each(the[_buttons], function (index, btn) {
             btn.update();
         });
+        the.emit('change');
     });
 };
 
