@@ -151,6 +151,7 @@ var Editable = Events.extend({
         var the = this;
         the[_containerEl].innerHTML = value;
         the.focus();
+        the.emit('change');
         return the;
     },
 
