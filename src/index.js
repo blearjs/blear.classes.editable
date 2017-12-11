@@ -342,7 +342,11 @@ module.exports = Editable;
 
 // ===============================================
 
-
+/**
+ * 执行本地命令
+ * @param command
+ * @returns {Function}
+ */
 function nativeExec(command) {
     return function () {
         var the = this;
