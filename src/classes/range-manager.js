@@ -191,9 +191,8 @@ pro[_pushHistory] = function () {
         return;
     }
 
-    console.log('put range', range);
     the[_historyManager].put(range);
-    the.emit('selectionChanged');
+    the.emit('selectionChange');
 };
 
 pro[_initEvent] = function () {

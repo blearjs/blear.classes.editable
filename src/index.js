@@ -14,6 +14,7 @@ var Events = require('blear.classes.events');
 var Hotkey = require('blear.classes.hotkey');
 var selector = require('blear.core.selector');
 var modification = require('blear.core.modification');
+var attribute = require('blear.core.attribute');
 var event = require('blear.core.event');
 var object = require('blear.utils.object');
 var array = require('blear.utils.array');
@@ -197,6 +198,7 @@ var _onMousedownListener = sole();
  */
 pro[_initNode] = function () {
     var the = this;
+    attribute.attr(the[_containerEl], 'contenteditable', true);
     the[_fixContainer]();
 };
 
@@ -268,7 +270,7 @@ pro[_initEvent] = function () {
         return false;
     });
 
-    the[_rangerManager].on('selectionChanged', function () {
+    the[_rangerManager].on('selectionChange', function () {
         array.each(the[_buttons], function (index, btn) {
             btn.update();
         });
