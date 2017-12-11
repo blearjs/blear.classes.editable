@@ -2,11 +2,7 @@
   "name": "blear.classes.editable",
   "version": "1.0.2",
   "description": "可编辑类",
-  "scripts": {
-    "live": "browser-sync start --config bs-config.js",
-    "test": "node ./node_modules/.bin/karma start karma.conf.js --single-run",
-    "prepublish": "npm test"
-  },
+  "scripts": {},
   "preferGlobal": false,
   "bin": {},
   "engines": {
