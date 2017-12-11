@@ -347,7 +347,6 @@ function nativeExec(command) {
     return function () {
         var the = this;
 
-        the[_rangerManager].focus();
         nativeCommand(command);
 
         return the;
